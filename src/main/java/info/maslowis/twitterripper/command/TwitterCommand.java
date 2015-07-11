@@ -24,58 +24,18 @@
 
 package info.maslowis.twitterripper.command;
 
-import com.beust.jcommander.Parameter;
-import com.beust.jcommander.Parameters;
+import twitter4j.Twitter;
 
 /**
- * Commands for handle a users following the authorized user
+ * The superclass for any twitter command
  *
  * @author Ivan Maslov
  */
-@Parameters(commandNames = "follower", commandDescription = "Operations with a users following the authorized user")
-public class FollowerCommand implements Command{
+public abstract class TwitterCommand extends Command {
+    protected Twitter twitter;
 
-    @Parameter(names = "-a", description = "Add a user to following")
-    private String add;
-
-    @Parameter(names = "-f", description = "Search for users")
-    private String find;
-
-    @Parameter(names = "-g", description = "Get a list of users following the authorized user")
-    private String get;
-
-    @Parameter(names = "-d", description = "Unfollow by a user")
-    private String delete;
-
-    public String getAdd() {
-        return add;
-    }
-
-    public void setAdd(String add) {
-        this.add = add;
-    }
-
-    public String getFind() {
-        return find;
-    }
-
-    public void setFind(String find) {
-        this.find = find;
-    }
-
-    public String getGet() {
-        return get;
-    }
-
-    public void setGet(String get) {
-        this.get = get;
-    }
-
-    public String getDelete() {
-        return delete;
-    }
-
-    public void setDelete(String delete) {
-        this.delete = delete;
+    protected TwitterCommand(Twitter twitter) {
+        super();
+        this.twitter = twitter;
     }
 }

@@ -22,38 +22,23 @@
  * SOFTWARE.
  */
 
-package info.maslowis.twitterripper.command;
+package info.maslowis.twitterripper.util;
 
-import org.apache.log4j.Logger;
+import twitter4j.Status;
+import twitter4j.User;
 
 /**
- * The superclass for any command
- *
  * @author Ivan Maslov
  */
-public abstract class Command {
-    protected final Logger logger;
-    private final String name;
-    private final String[] aliases;
+public final class Util {
 
-    protected Command() {
-        this.logger = Logger.getLogger(getClass());
-        this.name = getClass().getAnnotation(CommandName.class).name();
-        this.aliases = getClass().getAnnotation(CommandName.class).aliases();
+    // User{id=, name='', screenName='', location='', description=''}
+    public static String toString(final User user) {
+        return "User{id=" + user.getId() + ", name='" + user.getName() + "', screenName='" + user.getScreenName() + "', location='" + user.getLocation() + "', description='" + user.getDescription() + "'}";
     }
 
-    public final String getName() {
-        return name;
+    // Status{id=, text='', lang='', createdAt=, geoLocation=, isFavorited=, isRetweeted=, retweetCount=, isTruncated=}
+    public static String toString(final Status status) {
+        return "Status{id=" + status.getId() + ", text='" + status.getText() + "', lang='" + status.getLang() + "', createdAt=" + status.getCreatedAt() + ", geoLocation=" + status.getGeoLocation() + ", isFavorited=" + status.isFavorited() + ", isRetweeted=" + status.isRetweeted() + ", retweetCount=" + status.getRetweetCount() + ", isTruncated=" + status.isTruncated() + "}";
     }
-
-    public final String[] getAliases() {
-        return aliases;
-    }
-
-    /**
-     * This perform command, this method should be override in a subclasses
-     *
-     * @exception {@link info.maslowis.twitterripper.command.ExecuteCmdException} if any things throw any exception
-     */
-    public abstract void execute() throws ExecuteCmdException;
 }

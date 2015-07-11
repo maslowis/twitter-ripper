@@ -22,38 +22,43 @@
  * SOFTWARE.
  */
 
-package info.maslowis.twitterripper.command;
+package info.maslowis.twitterripper.command.impl;
 
-import org.apache.log4j.Logger;
+import com.beust.jcommander.Parameter;
+import com.beust.jcommander.Parameters;
+import info.maslowis.twitterripper.command.CommandName;
+import info.maslowis.twitterripper.command.ExecuteCmdException;
+import info.maslowis.twitterripper.command.TwitterCommand;
+import info.maslowis.twitterripper.util.Util;
+import twitter4j.Status;
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+
+import static java.lang.System.out;
 
 /**
- * The superclass for any command
+ * Show a specific tweet by ID
  *
  * @author Ivan Maslov
  */
-public abstract class Command {
-    protected final Logger logger;
-    private final String name;
-    private final String[] aliases;
+@CommandName(name = "tweet-show", aliases = "ts")
+@Parameters(commandDescription = "Returns the status specified by the required ID parameter")
+public class TweetShow extends TwitterCommand {
 
-    protected Command() {
-        this.logger = Logger.getLogger(getClass());
-        this.name = getClass().getAnnotation(CommandName.class).name();
-        this.aliases = getClass().getAnnotation(CommandName.class).aliases();
+    @Parameter(description = "The ID of the status you're trying to retrieve", required = true)
+    protected long id;
+
+    public TweetShow(Twitter twitter) {
+        super(twitter);
     }
 
-    public final String getName() {
-        return name;
+    @Override
+    public void execute() throws ExecuteCmdException {
+        try {
+            Status status = twitter.showStatus(id);
+            out.println(Util.toString(status));
+        } catch (TwitterException e) {
+            throw new ExecuteCmdException(e);
+        }
     }
-
-    public final String[] getAliases() {
-        return aliases;
-    }
-
-    /**
-     * This perform command, this method should be override in a subclasses
-     *
-     * @exception {@link info.maslowis.twitterripper.command.ExecuteCmdException} if any things throw any exception
-     */
-    public abstract void execute() throws ExecuteCmdException;
 }

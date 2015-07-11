@@ -22,56 +22,39 @@
  * SOFTWARE.
  */
 
-package info.maslowis.twitterripper.command;
+package info.maslowis.twitterripper.command.impl;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import info.maslowis.twitterripper.command.Command;
+import info.maslowis.twitterripper.command.CommandName;
+import info.maslowis.twitterripper.command.ExecuteCmdException;
+import info.maslowis.twitterripper.util.Util;
+import twitter4j.Status;
+import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
+
+import static java.lang.System.out;
 
 /**
- * Commands for work with a tweets
+ * Delete a specific tweet by ID
  *
  * @author Ivan Maslov
  */
-@Parameters(commandNames = "tweet", commandDescription = "Operations with user's tweets")
-public class TweetCommand implements Command {
-    @Parameter(names = "-p", description = "Post a tweet")
-    private String post;
-    @Parameter(names = "-f", description = "Search for tweets")
-    private String find;
-    @Parameter(names = "-g", description = "Get a list of latest tweets from user's home timeline")
-    private String get;
-    @Parameter(names = "-d", description = "Delete a tweet by Id")
-    private String delete;
+@CommandName(name = "tweet-delete", aliases = "td")
+@Parameters(commandDescription = "Destroys the status specified by the required ID parameter")
+public class TweetDelete extends Command {
 
-    public String getPost() {
-        return post;
-    }
+    @Parameter(description = "The ID of the status to destroy", required = true)
+    protected long id;
 
-    public void setPost(String post) {
-        this.post = post;
-    }
-
-    public String getFind() {
-        return find;
-    }
-
-    public void setFind(String find) {
-        this.find = find;
-    }
-
-    public String getGet() {
-        return get;
-    }
-
-    public void setGet(String get) {
-        this.get = get;
-    }
-
-    public String getDelete() {
-        return delete;
-    }
-
-    public void setDelete(String delete) {
-        this.delete = delete;
+    @Override
+    public void execute() throws ExecuteCmdException {
+        try {
+            Status status = TwitterFactory.getSingleton().destroyStatus(id);
+            out.println("You now deleted " + Util.toString(status));
+        } catch (TwitterException e) {
+            throw new ExecuteCmdException(e);
+        }
     }
 }

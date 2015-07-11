@@ -24,36 +24,23 @@
 
 package info.maslowis.twitterripper.command;
 
-import org.apache.log4j.Logger;
-
 /**
- * The superclass for any command
+ * Wrap exception for any exception which will be throw in process perform command
  *
  * @author Ivan Maslov
  */
-public abstract class Command {
-    protected final Logger logger;
-    private final String name;
-    private final String[] aliases;
+public class ExecuteCmdException extends Exception {
 
-    protected Command() {
-        this.logger = Logger.getLogger(getClass());
-        this.name = getClass().getAnnotation(CommandName.class).name();
-        this.aliases = getClass().getAnnotation(CommandName.class).aliases();
+    public ExecuteCmdException(String message) {
+        super(message);
     }
 
-    public final String getName() {
-        return name;
+    public ExecuteCmdException(String message, Throwable cause) {
+        super(message, cause);
     }
 
-    public final String[] getAliases() {
-        return aliases;
+    public ExecuteCmdException(Throwable cause) {
+        super(cause);
     }
 
-    /**
-     * This perform command, this method should be override in a subclasses
-     *
-     * @exception {@link info.maslowis.twitterripper.command.ExecuteCmdException} if any things throw any exception
-     */
-    public abstract void execute() throws ExecuteCmdException;
 }
