@@ -28,16 +28,31 @@ import twitter4j.Status;
 import twitter4j.User;
 
 /**
+ * Helper class
+ * <p/>
+ * <p><em>This class should not be instancing.</em> It include only a helper static methods.
+ *
  * @author Ivan Maslov
  */
 public final class Util {
 
-    // User{id=, name='', screenName='', location='', description=''}
+    private Util() {
+    }
+
+    /**
+     * Returns a representation the user as string
+     *
+     * @return a representation the user as string in format <em>User{id=, name='', screenName='', location='', description=''}</em>
+     */
     public static String toString(final User user) {
         return "User{id=" + user.getId() + ", name='" + user.getName() + "', screenName='" + user.getScreenName() + "', location='" + user.getLocation() + "', description='" + user.getDescription() + "'}";
     }
 
-    // Status{id=, text='', lang='', createdAt=, geoLocation=, isFavorited=, isRetweeted=, retweetCount=, isTruncated=}
+    /**
+     * Returns a representation the status (tweet) as string
+     *
+     * @return a representation the status as string in format <em>Status{id=, text='', lang='', createdAt=, geoLocation=, isFavorited=, isRetweeted=, retweetCount=, isTruncated=}</em>
+     */
     public static String toString(final Status status) {
         return "Status{id=" + status.getId() + ", text='" + status.getText() + "', lang='" + status.getLang() + "', createdAt=" + status.getCreatedAt() + ", geoLocation=" + status.getGeoLocation() + ", isFavorited=" + status.isFavorited() + ", isRetweeted=" + status.isRetweeted() + ", retweetCount=" + status.getRetweetCount() + ", isTruncated=" + status.isTruncated() + "}";
     }
