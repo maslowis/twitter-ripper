@@ -22,55 +22,51 @@
  * SOFTWARE.
  */
 
-package info.maslowis.twitterripper.auth;
+package info.maslowis.twitterripper.twitter;
 
+import jline.console.ConsoleReader;
+import org.apache.log4j.Logger;
+import org.fusesource.jansi.Ansi;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
-import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
 
-import java.io.BufferedReader;
 import java.io.IOException;
+
+import static java.lang.System.*;
+import static org.fusesource.jansi.Ansi.ansi;
 
 /**
  * The PIN-based OAuth
  *
  * @author Iavn Maslov
  */
-public class OAuthTwitter {
-    private final BufferedReader consoleReader;
+public final class OAuthTwitter {
+    private final static Logger logger = Logger.getLogger(OAuthTwitter.class);
     private final String consumerKey = "BGLOSuhvkQP9AZpsMhFmL6CKW";
     private final String consumerKeySecret = "10qVt73golhCM9vQj0z9wqQYPaV94xpaUEAh6T8UqFmFcMWzt6";
+    private final ConsoleReader reader;
 
-    public OAuthTwitter(BufferedReader consoleReader) {
-        this.consoleReader = consoleReader;
+    public OAuthTwitter(ConsoleReader reader) {
+        this.reader = reader;
     }
 
     /**
      * Displays authorization URL and gets PIN for connection to twitter under authorized user
-     *
-     * @return {@link twitter4j.Twitter}
      */
-    public Twitter getTwitter() {
-        Twitter twitter = new TwitterFactory().getInstance();
-        twitter.setOAuthConsumer(consumerKey, consumerKeySecret);
+    public void authorization() throws IOException {
         try {
+            Twitter twitter = TwitterFactory.getSingleton();
+            twitter.setOAuthConsumer(consumerKey, consumerKeySecret);
             RequestToken requestToken = twitter.getOAuthRequestToken();
-            System.out.println("Authorization URL:\n" + requestToken.getAuthorizationURL());
-            AccessToken accessToken = null;
-            while (accessToken == null) {
-                System.out.print("Input PIN here: ");
-                try {
-                    String pin = consoleReader.readLine();
-                    accessToken = twitter.getOAuthAccessToken(requestToken, pin);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            out.println(ansi().a(Ansi.Attribute.INTENSITY_BOLD).fg(Ansi.Color.GREEN).a("Authorization URL:" + lineSeparator() + requestToken.getAuthorizationURL()).reset());
+            out.println(ansi().a(Ansi.Attribute.INTENSITY_BOLD).fg(Ansi.Color.RED).a("Enter PIN please:").reset());
+            String pin = reader.readLine();
+            twitter.getOAuthAccessToken(requestToken, pin);
         } catch (TwitterException e) {
-            e.printStackTrace();
+            logger.error("Authorization fail! Please try to run application again and enter PIN.");
+            exit(1);
         }
-        return twitter;
     }
 }
