@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package info.maslowis.twitterripper.command.impl;
+package info.maslowis.twitterripper.command.impl.twitter;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
@@ -30,39 +30,28 @@ import info.maslowis.twitterripper.command.CommandName;
 import info.maslowis.twitterripper.command.ExecuteCmdException;
 import info.maslowis.twitterripper.command.TwitterCommand;
 import info.maslowis.twitterripper.util.Util;
-import twitter4j.*;
+import twitter4j.TwitterException;
+import twitter4j.User;
 
 import static java.lang.System.out;
 
 /**
- * Returns a list of user's tweets (the timeline) by user name
+ * Delete a user by ID from the friend list of the authenticating user
  *
  * @author Ivan Maslov
  */
-@CommandName(name = "timeline-get-name", aliases = "tgn")
-@Parameters(commandDescription = "Returns the recent statuses posted from the user specified in the name parameter")
-public class TimelineGetName extends TwitterCommand {
+@CommandName(name = "friend-delete-id", aliases = "fdi")
+@Parameters(commandDescription = "Allows the authenticating user to unfollow the user specified in the ID parameter")
+public class FriendDeleteId extends TwitterCommand {
 
-    @Parameter(names = {"-name", "-n"}, description = "The screen name of the user for whom to return the timeline", required = true)
-    protected String name;
-
-    @Parameter(names = {"-page", "-p"}, description = "The requesting page")
-    protected int page = 1;
-
-    @Parameter(names = {"-count", "-c"}, description = "The number of statuses to return per page")
-    protected int count = 20;
-
-    public TimelineGetName(Twitter twitter) {
-        super(twitter);
-    }
+    @Parameter(names = {"-id", "-i"}, description = "The ID of the user from which to unfollow", required = true)
+    protected long id;
 
     @Override
     public void execute() throws ExecuteCmdException {
         try {
-            ResponseList<Status> statuses = twitter.getUserTimeline(name, new Paging(page, count));
-            for (Status status : statuses) {
-                out.println(Util.toString(status));
-            }
+            User user = twitter.friendsFollowers().destroyFriendship(id);
+            out.println("You unfollow from " + Util.toString(user));
         } catch (TwitterException e) {
             throw new ExecuteCmdException(e);
         }

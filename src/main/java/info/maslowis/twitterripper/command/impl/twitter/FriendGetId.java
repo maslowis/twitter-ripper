@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package info.maslowis.twitterripper.command.impl;
+package info.maslowis.twitterripper.command.impl.twitter;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
@@ -30,38 +30,40 @@ import info.maslowis.twitterripper.command.CommandName;
 import info.maslowis.twitterripper.command.ExecuteCmdException;
 import info.maslowis.twitterripper.command.TwitterCommand;
 import info.maslowis.twitterripper.util.Util;
-import twitter4j.ResponseList;
-import twitter4j.Twitter;
+import twitter4j.PagableResponseList;
 import twitter4j.TwitterException;
 import twitter4j.User;
 
 import static java.lang.System.out;
 
 /**
- * Perform search for a users of the twitter
+ * Returns a list of friends for a specific user by him ID
  *
  * @author Ivan Maslov
  */
-@CommandName(name = "user-search", aliases = "us")
-@Parameters(commandDescription = "Run a search for users similar to the Find People button on Twitter.com")
-public class UserSearch extends TwitterCommand {
+@CommandName(name = "friend-get-id", aliases = "fgi")
+@Parameters(commandDescription = "Returns a list of user objects for every user the specified user is following")
+public class FriendGetId extends TwitterCommand {
 
-    @Parameter(names = {"-query", "-q"}, description = "The query to run against people search", required = true)
-    protected String query;
+    @Parameter(names = {"-id", "-i"}, description = "The ID of the user for whom to return results for", required = true)
+    protected long id;
 
-    @Parameter(names = {"-page", "-p"}, description = "The page of results to retrieve, number of statuses per page is fixed to 20")
-    protected int page = 1;
+    @Parameter(names = {"-pointer", "-p"}, description = "The cursor that you should send to the endpoint to receive the next batch of responses")
+    protected long pointer = -1L;
 
-    public UserSearch(Twitter twitter) {
-        super(twitter);
-    }
+    @Parameter(names = {"-count", "-c"}, description = "The number of users to return per page, up to a maximum of 200")
+    protected int count = 20;
 
     @Override
     public void execute() throws ExecuteCmdException {
         try {
-            ResponseList<User> users = twitter.users().searchUsers(query, page);
-            for (User user : users) {
-                out.println(Util.toString(user));
+            PagableResponseList<User> users = twitter.getFriendsList(id, pointer, count);
+            if (users.isEmpty()) {
+                out.println("No users");
+            } else {
+                for (User user : users) {
+                    out.println(Util.toString(user));
+                }
             }
         } catch (TwitterException e) {
             throw new ExecuteCmdException(e);

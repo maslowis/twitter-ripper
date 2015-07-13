@@ -22,47 +22,41 @@
  * SOFTWARE.
  */
 
-package info.maslowis.twitterripper.command.impl;
+package info.maslowis.twitterripper.command.impl.twitter;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import info.maslowis.twitterripper.command.CommandName;
 import info.maslowis.twitterripper.command.ExecuteCmdException;
 import info.maslowis.twitterripper.command.TwitterCommand;
-import info.maslowis.twitterripper.util.Util;
-import twitter4j.*;
+import twitter4j.Relationship;
+import twitter4j.TwitterException;
 
 import static java.lang.System.out;
 
 /**
- * Returns a list of friends for a specific user by him ID
+ * Enable or disable notifications from a user by him ID
  *
  * @author Ivan Maslov
  */
-@CommandName(name = "friend-get-id", aliases = "fgi")
-@Parameters(commandDescription = "Returns a list of user objects for every user the specified user is following")
-public class FriendGetId extends TwitterCommand {
+@CommandName(name = "friend-update-id", aliases = "fui")
+@Parameters(commandDescription = "Allows the authenticating user to enable or disable retweets and device notifications from the specified user in the ID parameter")
+public class FriendUpdateId extends TwitterCommand {
 
-    @Parameter(names = {"-id", "-i"}, description = "The ID of the user for whom to return results for", required = true)
+    @Parameter(names = {"-id", "-i"}, description = "The user id to update", required = true)
     protected long id;
 
-    @Parameter(names = {"-pointer", "-p"}, description = "The cursor that you should send to the endpoint to receive the next batch of responses")
-    protected long pointer = -1L;
+    @Parameter(names = {"-device", "-d"}, description = "Enable or disable device notifications")
+    protected boolean device = false;
 
-    @Parameter(names = {"-count", "-c"}, description = "The number of users to return per page, up to a maximum of 200")
-    protected int count = 20;
-
-    public FriendGetId(Twitter twitter) {
-        super(twitter);
-    }
+    @Parameter(names = {"-retweets", "-r"}, description = "Enable or disable device retweets")
+    protected boolean retweets = false;
 
     @Override
     public void execute() throws ExecuteCmdException {
         try {
-            PagableResponseList<User> users = twitter.getFriendsList(id, pointer, count);
-            for (User user : users) {
-                out.println(Util.toString(user));
-            }
+            Relationship relationship = twitter.updateFriendship(id, device, retweets);
+            out.println(String.format("Changed the notification settings from User{id=%1s, screenName='%2s'}", relationship.getTargetUserId(), relationship.getTargetUserScreenName()));
         } catch (TwitterException e) {
             throw new ExecuteCmdException(e);
         }

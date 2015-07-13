@@ -22,37 +22,39 @@
  * SOFTWARE.
  */
 
-package info.maslowis.twitterripper.command.impl;
+package info.maslowis.twitterripper.command.impl.twitter;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
-import info.maslowis.twitterripper.command.Command;
 import info.maslowis.twitterripper.command.CommandName;
 import info.maslowis.twitterripper.command.ExecuteCmdException;
+import info.maslowis.twitterripper.command.TwitterCommand;
 import info.maslowis.twitterripper.util.Util;
-import twitter4j.Status;
 import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
+import twitter4j.User;
 
 import static java.lang.System.out;
 
 /**
- * Delete a specific tweet by ID
+ * Add a user by ID to the friend list of the authenticating user
  *
  * @author Ivan Maslov
  */
-@CommandName(name = "tweet-delete", aliases = "td")
-@Parameters(commandDescription = "Destroys the status specified by the required ID parameter")
-public class TweetDelete extends Command {
+@CommandName(name = "friend-add-id", aliases = "fai")
+@Parameters(commandDescription = "Allows the authenticating user to follow the user specified in the ID parameter")
+public class FriendAddId extends TwitterCommand {
 
-    @Parameter(description = "The ID of the status to destroy", required = true)
+    @Parameter(names = {"-id", "-i"}, description = "The ID of the user to be befriended", required = true)
     protected long id;
+
+    @Parameter(names = {"-follow", "-f"}, description = "Enable notifications for the target user in addition to becoming friends")
+    protected boolean follow = false;
 
     @Override
     public void execute() throws ExecuteCmdException {
         try {
-            Status status = TwitterFactory.getSingleton().destroyStatus(id);
-            out.println("You now deleted " + Util.toString(status));
+            User user = twitter.friendsFollowers().createFriendship(id, follow);
+            out.println("You  became friends with " + Util.toString(user));
         } catch (TwitterException e) {
             throw new ExecuteCmdException(e);
         }

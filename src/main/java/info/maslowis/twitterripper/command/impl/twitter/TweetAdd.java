@@ -22,47 +22,38 @@
  * SOFTWARE.
  */
 
-package info.maslowis.twitterripper.command.impl;
+package info.maslowis.twitterripper.command.impl.twitter;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import info.maslowis.twitterripper.command.CommandName;
 import info.maslowis.twitterripper.command.ExecuteCmdException;
 import info.maslowis.twitterripper.command.TwitterCommand;
-import twitter4j.Relationship;
-import twitter4j.Twitter;
+import info.maslowis.twitterripper.util.Util;
+import twitter4j.Status;
 import twitter4j.TwitterException;
+
+import java.util.List;
 
 import static java.lang.System.out;
 
 /**
- * Enable or disable notifications from a user by him name
+ * Add a tweet
  *
  * @author Ivan Maslov
  */
-@CommandName(name = "friend-update-name", aliases = "fun")
-@Parameters(commandDescription = "Allows the authenticating user to enable or disable retweets and device notifications from the specified user in the name parameter")
-public class FriendUpdateName extends TwitterCommand {
+@CommandName(name = "tweet-add", aliases = "ta")
+@Parameters(commandDescription = "Updates the authenticating user's text")
+public class TweetAdd extends TwitterCommand {
 
-    @Parameter(names = {"-name", "-n"}, description = "The screen name of user to update", required = true)
-    protected String name;
-
-    @Parameter(names = {"-device", "-d"}, description = "Enable or disable device notifications")
-    protected boolean device;
-
-    @Parameter(names = {"-retweets", "-r"}, description = "Enable or disable device retweets")
-    protected boolean retweets;
-
-    public FriendUpdateName(Twitter twitter) {
-        super(twitter);
-    }
+    @Parameter(description = "The text of your text update", required = true)
+    protected List<String> text;
 
     @Override
     public void execute() throws ExecuteCmdException {
         try {
-            Relationship relationship = twitter.updateFriendship(name, device, retweets);
-            String output = String.format("Changed the notification settings from User{id=%1s, screenName='%2s'}", relationship.getTargetUserId(), relationship.getTargetUserScreenName());
-            out.println(output);
+            Status status = twitter.updateStatus(text.toString());
+            out.println("You now tweeted " + Util.toString(status));
         } catch (TwitterException e) {
             throw new ExecuteCmdException(e);
         }

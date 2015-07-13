@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package info.maslowis.twitterripper.command.impl;
+package info.maslowis.twitterripper.command.impl.twitter;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
@@ -30,38 +30,45 @@ import info.maslowis.twitterripper.command.CommandName;
 import info.maslowis.twitterripper.command.ExecuteCmdException;
 import info.maslowis.twitterripper.command.TwitterCommand;
 import info.maslowis.twitterripper.util.Util;
-import twitter4j.Twitter;
+import twitter4j.PagableResponseList;
 import twitter4j.TwitterException;
 import twitter4j.User;
 
 import static java.lang.System.out;
 
 /**
- * Add a user by ID to the friend list of the authenticating user
+ * Returns a list of friends for a specific user by him name
  *
  * @author Ivan Maslov
  */
-@CommandName(name = "friend-add-id", aliases = "fai")
-@Parameters(commandDescription = "Allows the authenticating user to follow the user specified in the ID parameter")
-public class FriendAddId extends TwitterCommand {
+@CommandName(name = "friend-get-name", aliases = "fgn")
+@Parameters(commandDescription = "Returns a list of user objects for every user the specified user is following")
+public class FriendGetName extends TwitterCommand {
 
-    @Parameter(names = {"-id", "-i"}, description = "The ID of the user to be befriended", required = true)
-    protected long id;
+    @Parameter(names = {"-name", "-n"}, description = "The screen name of the user for whom to return results for", required = true)
+    protected String name;
 
-    @Parameter(names = {"-follow", "-f"}, description = "Enable notifications for the target user in addition to becoming friends")
-    protected boolean follow;
+    @Parameter(names = {"-pointer", "-p"}, description = "The cursor that you should send to the endpoint to receive the next batch of responses")
+    protected long pointer = -1L;
 
-    public FriendAddId(Twitter twitter) {
-        super(twitter);
-    }
+    @Parameter(names = {"-count", "-c"}, description = "The number of users to return per page, up to a maximum of 200")
+    protected int count = 20;
 
     @Override
     public void execute() throws ExecuteCmdException {
         try {
-            User user = twitter.friendsFollowers().createFriendship(id, follow);
-            out.println("You  became friends with " + Util.toString(user));
+            PagableResponseList<User> users = twitter.getFriendsList(name, pointer, count);
+            if (users.isEmpty()) {
+              out.println("No users");
+            } else {
+                for (User user : users) {
+                    out.println(Util.toString(user));
+                }
+            }
         } catch (TwitterException e) {
             throw new ExecuteCmdException(e);
         }
     }
+
+
 }

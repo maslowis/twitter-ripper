@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package info.maslowis.twitterripper.command.impl;
+package info.maslowis.twitterripper.command.impl.twitter;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
@@ -30,36 +30,32 @@ import info.maslowis.twitterripper.command.CommandName;
 import info.maslowis.twitterripper.command.ExecuteCmdException;
 import info.maslowis.twitterripper.command.TwitterCommand;
 import info.maslowis.twitterripper.util.Util;
-import twitter4j.Twitter;
+import twitter4j.Status;
 import twitter4j.TwitterException;
-import twitter4j.User;
 
 import static java.lang.System.out;
 
 /**
- * Add a user by name to the friend list of the authenticating user
+ * Show a specific tweet by ID
  *
  * @author Ivan Maslov
  */
-@CommandName(name = "friend-add-name", aliases = "fan")
-@Parameters(commandDescription = "Allows the authenticating user to follow the user specified in the name parameter")
-public class FriendAddName extends TwitterCommand {
+@CommandName(name = "tweet-show", aliases = "ts")
+@Parameters(commandDescription = "Returns the status specified by the required ID parameter")
+public class TweetShow extends TwitterCommand {
 
-    @Parameter(names = {"-name", "-n"}, description = "The screen name of the user to be befriended", required = true)
-    protected String name;
-
-    @Parameter(names = {"-follow", "-f"}, description = "Enable notifications for the target user in addition to becoming friends")
-    protected boolean follow;
-
-    public FriendAddName(Twitter twitter) {
-        super(twitter);
-    }
+    @Parameter(names = {"-id", "-i"}, description = "The ID of the status you're trying to retrieve", required = true)
+    protected long id;
 
     @Override
     public void execute() throws ExecuteCmdException {
         try {
-            User user = twitter.createFriendship(name, follow);
-            out.println("You  became friends with " + Util.toString(user));
+            Status status = twitter.showStatus(id);
+            if (status == null) {
+                out.println("No such status");
+            } else {
+                out.println(Util.toString(status));
+            }
         } catch (TwitterException e) {
             throw new ExecuteCmdException(e);
         }

@@ -22,47 +22,50 @@
  * SOFTWARE.
  */
 
-package info.maslowis.twitterripper.command.impl;
+package info.maslowis.twitterripper.command.impl.twitter;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import info.maslowis.twitterripper.command.CommandName;
 import info.maslowis.twitterripper.command.ExecuteCmdException;
 import info.maslowis.twitterripper.command.TwitterCommand;
-import twitter4j.Relationship;
-import twitter4j.Twitter;
+import info.maslowis.twitterripper.util.Util;
+import twitter4j.Paging;
+import twitter4j.ResponseList;
+import twitter4j.Status;
 import twitter4j.TwitterException;
 
 import static java.lang.System.out;
 
 /**
- * Enable or disable notifications from a user by him ID
+ * Returns a list of user's tweets (the timeline) by user ID
  *
  * @author Ivan Maslov
  */
-@CommandName(name = "friend-update-id", aliases = "fui")
-@Parameters(commandDescription = "Allows the authenticating user to enable or disable retweets and device notifications from the specified user in the ID parameter")
-public class FriendUpdateId extends TwitterCommand {
+@CommandName(name = "timeline-get-id", aliases = "tgi")
+@Parameters(commandDescription = "Returns the recent statuses posted from the user specified in the ID parameter")
+public class TimelineGetId extends TwitterCommand {
 
-    @Parameter(names = {"-id", "-i"}, description = "The user id to update", required = true)
+    @Parameter(names = {"-id", "-i"}, description = "The ID of the user for whom to return the timeline", required = true)
     protected long id;
 
-    @Parameter(names = {"-device", "-d"}, description = "Enable or disable device notifications")
-    protected boolean device;
+    @Parameter(names = {"-page", "-p"}, description = "The requesting page")
+    protected int page = 1;
 
-    @Parameter(names = {"-retweets", "-r"}, description = "Enable or disable device retweets")
-    protected boolean retweets;
-
-    public FriendUpdateId(Twitter twitter) {
-        super(twitter);
-    }
+    @Parameter(names = {"-count", "-c"}, description = "The number of statuses to return per page")
+    protected int count = 20;
 
     @Override
     public void execute() throws ExecuteCmdException {
         try {
-            Relationship relationship = twitter.updateFriendship(id, device, retweets);
-            String output = String.format("Changed the notification settings from User{id=%1s, screenName='%2s'}", relationship.getTargetUserId(), relationship.getTargetUserScreenName());
-            out.println(output);
+            ResponseList<Status> statuses = twitter.getUserTimeline(id, new Paging(page, count));
+            if (statuses.isEmpty()) {
+                out.println("No statuses");
+            } else {
+                for (Status status : statuses) {
+                    out.println(Util.toString(status));
+                }
+            }
         } catch (TwitterException e) {
             throw new ExecuteCmdException(e);
         }

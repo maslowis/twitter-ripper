@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package info.maslowis.twitterripper.command.impl;
+package info.maslowis.twitterripper.command.impl.twitter;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
@@ -30,33 +30,28 @@ import info.maslowis.twitterripper.command.CommandName;
 import info.maslowis.twitterripper.command.ExecuteCmdException;
 import info.maslowis.twitterripper.command.TwitterCommand;
 import info.maslowis.twitterripper.util.Util;
-import twitter4j.Status;
-import twitter4j.Twitter;
 import twitter4j.TwitterException;
+import twitter4j.User;
 
 import static java.lang.System.out;
 
 /**
- * Show a specific tweet by ID
+ * Delete a user by name from the friend list of the authenticating user
  *
  * @author Ivan Maslov
  */
-@CommandName(name = "tweet-show", aliases = "ts")
-@Parameters(commandDescription = "Returns the status specified by the required ID parameter")
-public class TweetShow extends TwitterCommand {
+@CommandName(name = "friend-delete-name", aliases = "fdn")
+@Parameters(commandDescription = "Allows the authenticating user to unfollow the user specified in the name parameter")
+public class FriendDeleteName extends TwitterCommand {
 
-    @Parameter(description = "The ID of the status you're trying to retrieve", required = true)
-    protected long id;
-
-    public TweetShow(Twitter twitter) {
-        super(twitter);
-    }
+    @Parameter(names = {"-name", "-n"}, description = "The screen name of the user from which to unfollow")
+    protected String name;
 
     @Override
     public void execute() throws ExecuteCmdException {
         try {
-            Status status = twitter.showStatus(id);
-            out.println(Util.toString(status));
+            User user = twitter.friendsFollowers().destroyFriendship(name);
+            out.println("You unfollow from " + Util.toString(user));
         } catch (TwitterException e) {
             throw new ExecuteCmdException(e);
         }

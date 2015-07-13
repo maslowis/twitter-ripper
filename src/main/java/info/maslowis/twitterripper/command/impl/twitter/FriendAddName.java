@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package info.maslowis.twitterripper.command.impl;
+package info.maslowis.twitterripper.command.impl.twitter;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
@@ -30,43 +30,33 @@ import info.maslowis.twitterripper.command.CommandName;
 import info.maslowis.twitterripper.command.ExecuteCmdException;
 import info.maslowis.twitterripper.command.TwitterCommand;
 import info.maslowis.twitterripper.util.Util;
-import twitter4j.*;
+import twitter4j.TwitterException;
+import twitter4j.User;
 
 import static java.lang.System.out;
 
 /**
- * Returns a list of friends for a specific user by him name
+ * Add a user by name to the friend list of the authenticating user
  *
  * @author Ivan Maslov
  */
-@CommandName(name = "friend-get-name", aliases = "fgn")
-@Parameters(commandDescription = "Returns a list of user objects for every user the specified user is following")
-public class FriendGetName extends TwitterCommand {
+@CommandName(name = "friend-add-name", aliases = "fan")
+@Parameters(commandDescription = "Allows the authenticating user to follow the user specified in the name parameter")
+public class FriendAddName extends TwitterCommand {
 
-    @Parameter(names = {"-name", "-n"}, description = "The screen name of the user for whom to return results for", required = true)
+    @Parameter(names = {"-name", "-n"}, description = "The screen name of the user to be befriended", required = true)
     protected String name;
 
-    @Parameter(names = {"-pointer", "-p"}, description = "The cursor that you should send to the endpoint to receive the next batch of responses")
-    protected long pointer = -1L;
-
-    @Parameter(names = {"-count", "-c"}, description = "The number of users to return per page, up to a maximum of 200")
-    protected int count = 20;
-
-    public FriendGetName(Twitter twitter) {
-        super(twitter);
-    }
+    @Parameter(names = {"-follow", "-f"}, description = "Enable notifications for the target user in addition to becoming friends")
+    protected boolean follow = false;
 
     @Override
     public void execute() throws ExecuteCmdException {
         try {
-            PagableResponseList<User> users = twitter.getFriendsList(name, pointer, count);
-            for (User user : users) {
-                out.println(Util.toString(user));
-            }
+            User user = twitter.createFriendship(name, follow);
+            out.println("You  became friends with " + Util.toString(user));
         } catch (TwitterException e) {
             throw new ExecuteCmdException(e);
         }
     }
-
-
 }

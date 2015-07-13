@@ -22,47 +22,41 @@
  * SOFTWARE.
  */
 
-package info.maslowis.twitterripper.command.impl;
+package info.maslowis.twitterripper.command.impl.twitter;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import info.maslowis.twitterripper.command.CommandName;
 import info.maslowis.twitterripper.command.ExecuteCmdException;
 import info.maslowis.twitterripper.command.TwitterCommand;
-import info.maslowis.twitterripper.util.Util;
-import twitter4j.*;
+import twitter4j.Relationship;
+import twitter4j.TwitterException;
 
 import static java.lang.System.out;
 
 /**
- * Returns a list of user's tweets (the timeline) by user ID
+ * Enable or disable notifications from a user by him name
  *
  * @author Ivan Maslov
  */
-@CommandName(name = "timeline-get-id", aliases = "tgi")
-@Parameters(commandDescription = "Returns the recent statuses posted from the user specified in the ID parameter")
-public class TimelineGetId extends TwitterCommand {
+@CommandName(name = "friend-update-name", aliases = "fun")
+@Parameters(commandDescription = "Allows the authenticating user to enable or disable retweets and device notifications from the specified user in the name parameter")
+public class FriendUpdateName extends TwitterCommand {
 
-    @Parameter(names = {"-id", "-i"}, description = "The ID of the user for whom to return the timeline", required = true)
-    protected long id;
+    @Parameter(names = {"-name", "-n"}, description = "The screen name of user to update", required = true)
+    protected String name;
 
-    @Parameter(names = {"-page", "-p"}, description = "The requesting page")
-    protected int page = 1;
+    @Parameter(names = {"-device", "-d"}, description = "Enable or disable device notifications")
+    protected boolean device = false;
 
-    @Parameter(names = {"-count", "-c"}, description = "The number of statuses to return per page")
-    protected int count = 20;
-
-    public TimelineGetId(Twitter twitter) {
-        super(twitter);
-    }
+    @Parameter(names = {"-retweets", "-r"}, description = "Enable or disable device retweets")
+    protected boolean retweets = false;
 
     @Override
     public void execute() throws ExecuteCmdException {
         try {
-            ResponseList<Status> statuses = twitter.getUserTimeline(id, new Paging(page, count));
-            for (Status status : statuses) {
-                out.println(Util.toString(status));
-            }
+            Relationship relationship = twitter.updateFriendship(name, device, retweets);
+            out.println(String.format("Changed the notification settings from User{id=%1s, screenName='%2s'}", relationship.getTargetUserId(), relationship.getTargetUserScreenName()));
         } catch (TwitterException e) {
             throw new ExecuteCmdException(e);
         }

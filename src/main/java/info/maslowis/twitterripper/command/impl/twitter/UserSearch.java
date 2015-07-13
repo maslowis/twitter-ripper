@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package info.maslowis.twitterripper.command.impl;
+package info.maslowis.twitterripper.command.impl.twitter;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
@@ -30,33 +30,34 @@ import info.maslowis.twitterripper.command.CommandName;
 import info.maslowis.twitterripper.command.ExecuteCmdException;
 import info.maslowis.twitterripper.command.TwitterCommand;
 import info.maslowis.twitterripper.util.Util;
-import twitter4j.Status;
-import twitter4j.Twitter;
+import twitter4j.ResponseList;
 import twitter4j.TwitterException;
+import twitter4j.User;
 
 import static java.lang.System.out;
 
 /**
- * Add a tweet
+ * Perform search for a users of the twitter
  *
  * @author Ivan Maslov
  */
-@CommandName(name = "tweet-add", aliases = "ta")
-@Parameters(commandDescription = "Updates the authenticating user's text")
-public class TweetAdd extends TwitterCommand {
+@CommandName(name = "user-search", aliases = "us")
+@Parameters(commandDescription = "Run a search for users similar to the Find People button on Twitter.com")
+public class UserSearch extends TwitterCommand {
 
-    @Parameter(description = "The text of your text update", required = true)
-    protected String text;
+    @Parameter(names = {"-query", "-q"}, description = "The query to run against people search", required = true)
+    protected String query;
 
-    public TweetAdd(Twitter twitter) {
-        super(twitter);
-    }
+    @Parameter(names = {"-page", "-p"}, description = "The page of results to retrieve, number of statuses per page is fixed to 20")
+    protected int page = 1;
 
     @Override
     public void execute() throws ExecuteCmdException {
         try {
-            Status status = twitter.updateStatus(text);
-            out.println("You now tweeted " + Util.toString(status));
+            ResponseList<User> users = twitter.users().searchUsers(query, page);
+            for (User user : users) {
+                out.println(Util.toString(user));
+            }
         } catch (TwitterException e) {
             throw new ExecuteCmdException(e);
         }
