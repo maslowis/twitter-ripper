@@ -30,7 +30,7 @@ import twitter4j.User;
 /**
  * Helper class
  * <p/>
- * <p><em>This class should not be instancing.</em> It include only a helper static methods.
+ * <p><em>This class should not be instancing.</em> It include only a helper static methods.</p>
  *
  * @author Ivan Maslov
  */
@@ -56,4 +56,5 @@ public final class Util {
     public static String toString(final Status status) {
         return "Status{id=" + status.getId() + ", text='" + status.getText() + "', lang='" + status.getLang() + "', createdAt=" + status.getCreatedAt() + ", geoLocation=" + status.getGeoLocation() + ", isFavorited=" + status.isFavorited() + ", isRetweeted=" + status.isRetweeted() + ", retweetCount=" + status.getRetweetCount() + ", isTruncated=" + status.isTruncated() + "}";
     }
+
 }
