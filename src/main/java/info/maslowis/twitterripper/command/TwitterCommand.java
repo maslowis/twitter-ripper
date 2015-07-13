@@ -25,6 +25,7 @@
 package info.maslowis.twitterripper.command;
 
 import twitter4j.Twitter;
+import twitter4j.TwitterFactory;
 
 /**
  * The superclass for any twitter command
@@ -34,8 +35,8 @@ import twitter4j.Twitter;
 public abstract class TwitterCommand extends Command {
     protected Twitter twitter;
 
-    protected TwitterCommand(Twitter twitter) {
+    protected TwitterCommand() {
         super();
-        this.twitter = twitter;
+        this.twitter = TwitterFactory.getSingleton();
     }
 }
