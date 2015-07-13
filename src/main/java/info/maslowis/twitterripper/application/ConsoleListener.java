@@ -32,7 +32,6 @@ import info.maslowis.twitterripper.command.ExecuteCmdException;
 import info.maslowis.twitterripper.jcommander.JCommanderFactory;
 import jline.console.ConsoleReader;
 import org.apache.log4j.Logger;
-import org.fusesource.jansi.Ansi;
 
 import java.io.IOException;
 import java.util.List;
@@ -41,6 +40,7 @@ import java.util.concurrent.Executors;
 
 import static java.lang.System.exit;
 import static java.lang.System.out;
+import static org.fusesource.jansi.Ansi.*;
 
 /**
  * Console listener
@@ -123,13 +123,13 @@ class ConsoleListener implements Runnable {
     }
 
     private void printWelcome() {
-        out.println(Ansi.ansi().eraseScreen().a(Ansi.Attribute.INTENSITY_BOLD).fg(Ansi.Color.GREEN).a("Welcome to Twitter-Ripper application!").newline().reset());
+        out.println(ansi().eraseScreen().a(Attribute.INTENSITY_BOLD).fg(Color.GREEN).a("Welcome to Twitter-Ripper application!").newline().reset());
         JCommanderFactory.getInstance().usage();
         printEnter();
     }
 
     private void printEnter() {
         logger.info(System.lineSeparator());
-        out.println(Ansi.ansi().a(Ansi.Attribute.INTENSITY_BOLD).fg(Ansi.Color.GREEN).a("Enter the command:").reset());
+        out.println(ansi().a(Attribute.INTENSITY_BOLD).fg(Color.GREEN).a("Enter the command:").reset());
     }
 }

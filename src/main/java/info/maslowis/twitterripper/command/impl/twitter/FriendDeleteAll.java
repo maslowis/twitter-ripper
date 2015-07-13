@@ -30,7 +30,6 @@ import info.maslowis.twitterripper.command.CommandName;
 import info.maslowis.twitterripper.command.ExecuteCmdException;
 import info.maslowis.twitterripper.command.TwitterCommand;
 import info.maslowis.twitterripper.util.Util;
-import org.fusesource.jansi.Ansi;
 import twitter4j.PagableResponseList;
 import twitter4j.TwitterException;
 import twitter4j.User;
@@ -39,6 +38,7 @@ import java.io.IOException;
 
 import static java.lang.System.exit;
 import static java.lang.System.out;
+import static org.fusesource.jansi.Ansi.*;
 
 /**
  * Delete all user from the friend list of the authenticating user
@@ -51,10 +51,10 @@ public class FriendDeleteAll extends TwitterCommand {
 
     @Override
     public void execute() throws ExecuteCmdException {
-        out.println(Ansi.ansi().a(Ansi.Attribute.INTENSITY_BOLD).fg(Ansi.Color.RED).a("This command delete all user from your friend list! You want to continue? [yes/no]").reset());
         try {
-            String input = Application.INSTANCE.getReader().readLine().trim();
-            if (input.equalsIgnoreCase("yes")) {
+            out.println(ansi().a(Attribute.INTENSITY_BOLD).fg(Color.RED).a("This command delete all user from your friend list! You want to continue? [yes/no]").reset());
+            String input = Application.INSTANCE.getReader().readLine();
+            if (input.trim().equalsIgnoreCase("yes")) {
                 try {
                     long nextCursor = -1L;
                     final int countEntry = 200;
@@ -70,7 +70,7 @@ public class FriendDeleteAll extends TwitterCommand {
                     throw new ExecuteCmdException(e);
                 }
             } else {
-                return;
+                out.println("Command was cancelled");
             }
         } catch (IOException e) {
             logger.error("Error reading input", e);

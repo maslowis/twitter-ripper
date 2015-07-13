@@ -30,7 +30,6 @@ import info.maslowis.twitterripper.command.CommandName;
 import info.maslowis.twitterripper.command.ExecuteCmdException;
 import info.maslowis.twitterripper.command.TwitterCommand;
 import info.maslowis.twitterripper.util.Util;
-import org.fusesource.jansi.Ansi;
 import twitter4j.Paging;
 import twitter4j.ResponseList;
 import twitter4j.Status;
@@ -40,6 +39,7 @@ import java.io.IOException;
 
 import static java.lang.System.exit;
 import static java.lang.System.out;
+import static org.fusesource.jansi.Ansi.*;
 
 /**
  * Delete all tweets of the authenticating user
@@ -52,10 +52,10 @@ public class TweetDeleteAll extends TwitterCommand {
 
     @Override
     public void execute() throws ExecuteCmdException {
-        out.println(Ansi.ansi().a(Ansi.Attribute.INTENSITY_BOLD).fg(Ansi.Color.RED).a("This command delete all yours statuses! You want to continue? [yes/no]").reset());
         try {
-            String input = Application.INSTANCE.getReader().readLine().trim();
-            if (input.equalsIgnoreCase("yes")) {
+            out.println(ansi().a(Attribute.INTENSITY_BOLD).fg(Color.RED).a("This command delete all yours statuses! You want to continue? [yes/no]").reset());
+            String input = Application.INSTANCE.getReader().readLine();
+            if (input.trim().equalsIgnoreCase("yes")) {
                 try {
                     int page = 1;
                     final int count = 200;
@@ -74,7 +74,7 @@ public class TweetDeleteAll extends TwitterCommand {
                     throw new ExecuteCmdException(e);
                 }
             } else {
-                return;
+                out.println("Command was cancelled");
             }
         } catch (IOException e) {
             logger.error("Error reading input", e);

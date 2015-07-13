@@ -26,7 +26,6 @@ package info.maslowis.twitterripper.twitter;
 
 import jline.console.ConsoleReader;
 import org.apache.log4j.Logger;
-import org.fusesource.jansi.Ansi;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
@@ -34,8 +33,9 @@ import twitter4j.auth.RequestToken;
 
 import java.io.IOException;
 
-import static java.lang.System.*;
-import static org.fusesource.jansi.Ansi.ansi;
+import static java.lang.System.exit;
+import static java.lang.System.out;
+import static org.fusesource.jansi.Ansi.*;
 
 /**
  * The PIN-based OAuth
@@ -60,8 +60,9 @@ public final class OAuthTwitter {
             Twitter twitter = TwitterFactory.getSingleton();
             twitter.setOAuthConsumer(consumerKey, consumerKeySecret);
             RequestToken requestToken = twitter.getOAuthRequestToken();
-            out.println(ansi().a(Ansi.Attribute.INTENSITY_BOLD).fg(Ansi.Color.GREEN).a("Authorization URL:" + lineSeparator() + requestToken.getAuthorizationURL()).reset());
-            out.println(ansi().a(Ansi.Attribute.INTENSITY_BOLD).fg(Ansi.Color.RED).a("Enter PIN please:").reset());
+            out.println(ansi().a(Attribute.INTENSITY_BOLD).fg(Color.GREEN).a("Authorization URL:").reset());
+            out.println(ansi().a(Attribute.INTENSITY_BOLD).fg(Color.CYAN).a(requestToken.getAuthorizationURL()));
+            out.println(ansi().a(Attribute.INTENSITY_BOLD).fg(Color.RED).a("Enter PIN please:").reset());
             String pin = reader.readLine();
             twitter.getOAuthAccessToken(requestToken, pin);
         } catch (TwitterException e) {

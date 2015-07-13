@@ -29,10 +29,9 @@ import info.maslowis.twitterripper.application.Application;
 import info.maslowis.twitterripper.command.Command;
 import info.maslowis.twitterripper.command.CommandName;
 import info.maslowis.twitterripper.command.ExecuteCmdException;
-import org.fusesource.jansi.Ansi;
 
 import static java.lang.System.out;
-import static org.fusesource.jansi.Ansi.ansi;
+import static org.fusesource.jansi.Ansi.*;
 
 /**
  * Exit from the application
@@ -45,7 +44,7 @@ public class Exit extends Command {
 
     @Override
     public void execute() throws ExecuteCmdException {
-        out.println(ansi().a(Ansi.Attribute.INTENSITY_BOLD).fg(Ansi.Color.GREEN).a("Good bye!").reset());
+        out.println(ansi().a(Attribute.INTENSITY_BOLD).fg(Color.GREEN).a("Good bye!").reset());
         Application.INSTANCE.stop();
         System.exit(0);
     }
