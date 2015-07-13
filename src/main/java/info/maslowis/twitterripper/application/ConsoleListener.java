@@ -35,8 +35,6 @@ import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 import static java.lang.System.exit;
 import static java.lang.System.out;
@@ -53,11 +51,9 @@ class ConsoleListener implements Runnable {
 
     private final static Logger logger = Logger.getLogger(ConsoleListener.class);
 
-    private final Executor executorCommand;
     private final ConsoleReader reader;
 
     ConsoleListener(ConsoleReader reader) {
-        this.executorCommand = Executors.newCachedThreadPool();
         this.reader = reader;
     }
 
@@ -93,19 +89,14 @@ class ConsoleListener implements Runnable {
                 final List<Object> commands = jCommander.getCommands().get(parsedCommand).getObjects();
                 for (final Object object : commands) {
                     if (object instanceof Command) {
-                        executorCommand.execute(new Runnable() {
-                            @Override
-                            public void run() {
-                                Command command = (Command) object;
-                                try {
-                                    command.execute();
-                                } catch (ExecuteCmdException e) {
-                                    logger.error("Error", e);
-                                } finally {
-                                    printEnter();
-                                }
-                            }
-                        });
+                        Command command = (Command) object;
+                        try {
+                            command.execute();
+                        } catch (ExecuteCmdException e) {
+                            logger.error("Error", e);
+                        } finally {
+                            printEnter();
+                        }
                     }
                 }
             } else {
