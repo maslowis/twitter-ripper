@@ -25,12 +25,24 @@
 package info.maslowis.twitterripper.command;
 
 /**
+ * Common interface for any console command
+ *
  * @author Ivan Maslov
  */
 public interface Command {
 
+    /**
+     * Returns the command name
+     *
+     * @return the command name
+     */
     String getName();
 
+    /**
+     * Returns the aliases for command
+     *
+     * @return the aliases for command
+     */
     String[] getAliases();
 
     /**
