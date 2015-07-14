@@ -26,9 +26,9 @@ package info.maslowis.twitterripper.command.impl.twitter;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import info.maslowis.twitterripper.command.AbstractTwitterCommand;
 import info.maslowis.twitterripper.command.CommandName;
 import info.maslowis.twitterripper.command.ExecuteCmdException;
-import info.maslowis.twitterripper.command.TwitterCommand;
 import info.maslowis.twitterripper.util.Util;
 import twitter4j.Status;
 import twitter4j.TwitterException;
@@ -42,7 +42,7 @@ import static java.lang.System.out;
  */
 @CommandName(name = "tweet-delete", aliases = "td")
 @Parameters(commandDescription = "Destroys the status specified by the required ID parameter")
-public class TweetDelete extends TwitterCommand {
+public class TweetDelete extends AbstractTwitterCommand {
 
     @Parameter(names = {"-id", "-i"}, description = "The ID of the status to destroy", required = true)
     protected long id;

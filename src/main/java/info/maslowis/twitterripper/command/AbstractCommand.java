@@ -22,30 +22,34 @@
  * SOFTWARE.
  */
 
-package info.maslowis.twitterripper.command.impl;
+package info.maslowis.twitterripper.command;
 
-import com.beust.jcommander.Parameters;
-import info.maslowis.twitterripper.application.Application;
-import info.maslowis.twitterripper.command.AbstractCommand;
-import info.maslowis.twitterripper.command.CommandName;
-import info.maslowis.twitterripper.command.ExecuteCmdException;
-
-import static java.lang.System.out;
-import static org.fusesource.jansi.Ansi.*;
+import org.apache.log4j.Logger;
 
 /**
- * Exit from the application
+ * The superclass for any command
  *
  * @author Ivan Maslov
  */
-@CommandName(name = "exit", aliases = {"quit", "e", "x", "q"})
-@Parameters(commandDescription = "Exit from the application")
-public class Exit extends AbstractCommand {
+public abstract class AbstractCommand implements Command {
+    protected final Logger logger;
+    private final String name;
+    private final String[] aliases;
+
+    protected AbstractCommand() {
+        this.logger = Logger.getLogger(getClass());
+        this.name = getClass().getAnnotation(CommandName.class).name();
+        this.aliases = getClass().getAnnotation(CommandName.class).aliases();
+    }
 
     @Override
-    public void execute() throws ExecuteCmdException {
-        out.println(ansi().a(Attribute.INTENSITY_BOLD).fg(Color.GREEN).a("Good bye!").reset());
-        Application.INSTANCE.stop();
-        System.exit(0);
+    public final String getName() {
+        return name;
     }
+
+    @Override
+    public final String[] getAliases() {
+        return aliases;
+    }
+
 }

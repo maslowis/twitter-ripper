@@ -28,7 +28,7 @@ import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
 import com.beust.jcommander.Parameters;
-import info.maslowis.twitterripper.command.Command;
+import info.maslowis.twitterripper.command.AbstractCommand;
 import info.maslowis.twitterripper.command.CommandName;
 import info.maslowis.twitterripper.command.ExecuteCmdException;
 import info.maslowis.twitterripper.jcommander.JCommanderFactory;
@@ -43,7 +43,7 @@ import java.util.List;
  */
 @CommandName(name = "help", aliases = {"usage", "h"})
 @Parameters(commandDescription = "Print help for available commands")
-public class Help extends Command {
+public class Help extends AbstractCommand {
 
     @Parameter(description = "The command names")
     protected List<String> commandNames = new ArrayList<>();

@@ -26,9 +26,9 @@ package info.maslowis.twitterripper.command.impl.twitter;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import info.maslowis.twitterripper.command.AbstractTwitterCommand;
 import info.maslowis.twitterripper.command.CommandName;
 import info.maslowis.twitterripper.command.ExecuteCmdException;
-import info.maslowis.twitterripper.command.TwitterCommand;
 import info.maslowis.twitterripper.util.Util;
 import twitter4j.ResponseList;
 import twitter4j.TwitterException;
@@ -43,7 +43,7 @@ import static java.lang.System.out;
  */
 @CommandName(name = "user-search", aliases = "us")
 @Parameters(commandDescription = "Run a search for users similar to the Find People button on Twitter.com")
-public class UserSearch extends TwitterCommand {
+public class UserSearch extends AbstractTwitterCommand {
 
     @Parameter(names = {"-query", "-q"}, description = "The query to run against people search", required = true)
     protected String query;

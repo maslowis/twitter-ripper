@@ -24,36 +24,19 @@
 
 package info.maslowis.twitterripper.command;
 
-import org.apache.log4j.Logger;
-
 /**
- * The superclass for any command
- *
  * @author Ivan Maslov
  */
-public abstract class Command {
-    protected final Logger logger;
-    private final String name;
-    private final String[] aliases;
+public interface Command {
 
-    protected Command() {
-        this.logger = Logger.getLogger(getClass());
-        this.name = getClass().getAnnotation(CommandName.class).name();
-        this.aliases = getClass().getAnnotation(CommandName.class).aliases();
-    }
+    String getName();
 
-    public final String getName() {
-        return name;
-    }
-
-    public final String[] getAliases() {
-        return aliases;
-    }
+    String[] getAliases();
 
     /**
      * This perform command, this method should be override in a subclasses
      *
-     * @exception {@link info.maslowis.twitterripper.command.ExecuteCmdException} if any things throw any exception
+     * @throws {@link ExecuteCmdException} if any things throw any exception
      */
-    public abstract void execute() throws ExecuteCmdException;
+    void execute() throws ExecuteCmdException;
 }

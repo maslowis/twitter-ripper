@@ -26,9 +26,9 @@ package info.maslowis.twitterripper.command.impl.twitter;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import info.maslowis.twitterripper.command.AbstractTwitterCommand;
 import info.maslowis.twitterripper.command.CommandName;
 import info.maslowis.twitterripper.command.ExecuteCmdException;
-import info.maslowis.twitterripper.command.TwitterCommand;
 import info.maslowis.twitterripper.util.Util;
 import twitter4j.TwitterException;
 import twitter4j.User;
@@ -42,7 +42,7 @@ import static java.lang.System.out;
  */
 @CommandName(name = "friend-add-name", aliases = "fan")
 @Parameters(commandDescription = "Allows the authenticating user to follow the user specified in the name parameter")
-public class FriendAddName extends TwitterCommand {
+public class FriendAddName extends AbstractTwitterCommand {
 
     @Parameter(names = {"-name", "-n"}, description = "The screen name of the user to be befriended", required = true)
     protected String name;

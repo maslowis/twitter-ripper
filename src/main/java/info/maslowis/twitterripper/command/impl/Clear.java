@@ -25,7 +25,7 @@
 package info.maslowis.twitterripper.command.impl;
 
 import com.beust.jcommander.Parameters;
-import info.maslowis.twitterripper.command.Command;
+import info.maslowis.twitterripper.command.AbstractCommand;
 import info.maslowis.twitterripper.command.CommandName;
 import info.maslowis.twitterripper.command.ExecuteCmdException;
 import org.fusesource.jansi.Ansi;
@@ -39,7 +39,7 @@ import static java.lang.System.out;
  */
 @CommandName(name = "clear", aliases = "c")
 @Parameters(commandDescription = "Clear the screen")
-public class Clear extends Command {
+public class Clear extends AbstractCommand {
 
     @Override
     public void execute() throws ExecuteCmdException {

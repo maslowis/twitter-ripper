@@ -32,10 +32,10 @@ import twitter4j.TwitterFactory;
  *
  * @author Ivan Maslov
  */
-public abstract class TwitterCommand extends Command {
+public abstract class AbstractTwitterCommand extends AbstractCommand {
     protected Twitter twitter;
 
-    protected TwitterCommand() {
+    protected AbstractTwitterCommand() {
         super();
         this.twitter = TwitterFactory.getSingleton();
     }

@@ -26,9 +26,9 @@ package info.maslowis.twitterripper.command.impl.twitter;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import info.maslowis.twitterripper.command.AbstractTwitterCommand;
 import info.maslowis.twitterripper.command.CommandName;
 import info.maslowis.twitterripper.command.ExecuteCmdException;
-import info.maslowis.twitterripper.command.TwitterCommand;
 import info.maslowis.twitterripper.util.Util;
 import twitter4j.Paging;
 import twitter4j.ResponseList;
@@ -44,7 +44,7 @@ import static java.lang.System.out;
  */
 @CommandName(name = "timeline-get-name", aliases = "tgn")
 @Parameters(commandDescription = "Returns the recent statuses posted from the user specified in the name parameter")
-public class TimelineGetName extends TwitterCommand {
+public class TimelineGetName extends AbstractTwitterCommand {
 
     @Parameter(names = {"-name", "-n"}, description = "The screen name of the user for whom to return the timeline", required = true)
     protected String name;

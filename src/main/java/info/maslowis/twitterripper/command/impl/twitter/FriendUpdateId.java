@@ -26,9 +26,9 @@ package info.maslowis.twitterripper.command.impl.twitter;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import info.maslowis.twitterripper.command.AbstractTwitterCommand;
 import info.maslowis.twitterripper.command.CommandName;
 import info.maslowis.twitterripper.command.ExecuteCmdException;
-import info.maslowis.twitterripper.command.TwitterCommand;
 import twitter4j.Relationship;
 import twitter4j.TwitterException;
 
@@ -41,7 +41,7 @@ import static java.lang.System.out;
  */
 @CommandName(name = "friend-update-id", aliases = "fui")
 @Parameters(commandDescription = "Allows the authenticating user to enable or disable retweets and device notifications from the specified user in the ID parameter")
-public class FriendUpdateId extends TwitterCommand {
+public class FriendUpdateId extends AbstractTwitterCommand {
 
     @Parameter(names = {"-id", "-i"}, description = "The user id to update", required = true)
     protected long id;

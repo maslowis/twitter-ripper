@@ -26,9 +26,9 @@ package info.maslowis.twitterripper.command.impl.twitter;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import info.maslowis.twitterripper.command.AbstractTwitterCommand;
 import info.maslowis.twitterripper.command.CommandName;
 import info.maslowis.twitterripper.command.ExecuteCmdException;
-import info.maslowis.twitterripper.command.TwitterCommand;
 import info.maslowis.twitterripper.util.Util;
 import twitter4j.PagableResponseList;
 import twitter4j.TwitterException;
@@ -43,7 +43,7 @@ import static java.lang.System.out;
  */
 @CommandName(name = "friend-get-id", aliases = "fgi")
 @Parameters(commandDescription = "Returns a list of user objects for every user the specified user is following")
-public class FriendGetId extends TwitterCommand {
+public class FriendGetId extends AbstractTwitterCommand {
 
     @Parameter(names = {"-id", "-i"}, description = "The ID of the user for whom to return results for", required = true)
     protected long id;

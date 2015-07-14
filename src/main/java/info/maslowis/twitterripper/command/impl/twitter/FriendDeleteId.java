@@ -26,9 +26,9 @@ package info.maslowis.twitterripper.command.impl.twitter;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import info.maslowis.twitterripper.command.AbstractTwitterCommand;
 import info.maslowis.twitterripper.command.CommandName;
 import info.maslowis.twitterripper.command.ExecuteCmdException;
-import info.maslowis.twitterripper.command.TwitterCommand;
 import info.maslowis.twitterripper.util.Util;
 import twitter4j.TwitterException;
 import twitter4j.User;
@@ -42,7 +42,7 @@ import static java.lang.System.out;
  */
 @CommandName(name = "friend-delete-id", aliases = "fdi")
 @Parameters(commandDescription = "Allows the authenticating user to unfollow the user specified in the ID parameter")
-public class FriendDeleteId extends TwitterCommand {
+public class FriendDeleteId extends AbstractTwitterCommand {
 
     @Parameter(names = {"-id", "-i"}, description = "The ID of the user from which to unfollow", required = true)
     protected long id;

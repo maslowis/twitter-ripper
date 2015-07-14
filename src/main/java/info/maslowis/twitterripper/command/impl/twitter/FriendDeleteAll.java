@@ -26,9 +26,9 @@ package info.maslowis.twitterripper.command.impl.twitter;
 
 import com.beust.jcommander.Parameters;
 import info.maslowis.twitterripper.application.Application;
+import info.maslowis.twitterripper.command.AbstractTwitterCommand;
 import info.maslowis.twitterripper.command.CommandName;
 import info.maslowis.twitterripper.command.ExecuteCmdException;
-import info.maslowis.twitterripper.command.TwitterCommand;
 import info.maslowis.twitterripper.util.Util;
 import twitter4j.PagableResponseList;
 import twitter4j.TwitterException;
@@ -47,7 +47,7 @@ import static org.fusesource.jansi.Ansi.*;
  */
 @CommandName(name = "friend-delete-all", aliases = "fda")
 @Parameters(commandDescription = "Allows the authenticating user unfollow from all user")
-public class FriendDeleteAll extends TwitterCommand {
+public class FriendDeleteAll extends AbstractTwitterCommand {
 
     @Override
     public void execute() throws ExecuteCmdException {

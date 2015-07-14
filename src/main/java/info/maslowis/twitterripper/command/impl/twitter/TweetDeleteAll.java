@@ -26,9 +26,9 @@ package info.maslowis.twitterripper.command.impl.twitter;
 
 import com.beust.jcommander.Parameters;
 import info.maslowis.twitterripper.application.Application;
+import info.maslowis.twitterripper.command.AbstractTwitterCommand;
 import info.maslowis.twitterripper.command.CommandName;
 import info.maslowis.twitterripper.command.ExecuteCmdException;
-import info.maslowis.twitterripper.command.TwitterCommand;
 import info.maslowis.twitterripper.util.Util;
 import twitter4j.Paging;
 import twitter4j.ResponseList;
@@ -48,7 +48,7 @@ import static org.fusesource.jansi.Ansi.*;
  */
 @CommandName(name = "tweet-delete-all", aliases = "tda")
 @Parameters(commandDescription = "Destroys all statuses of the authenticating user")
-public class TweetDeleteAll extends TwitterCommand {
+public class TweetDeleteAll extends AbstractTwitterCommand {
 
     @Override
     public void execute() throws ExecuteCmdException {
